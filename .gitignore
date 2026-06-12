@@ -10,6 +10,10 @@ client/dist/
 .env
 server/.env
 
+# Uploaded files (user content)
+uploads/
+server/uploads/
+
 # OS files
 .DS_Store
 Thumbs.db

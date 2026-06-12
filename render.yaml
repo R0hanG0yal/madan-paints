@@ -8,6 +8,8 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: VITE_API_URL
+        value: /api
       - key: ALLOWED_ORIGINS
         value: https://madan-paints.onrender.com
       - key: JWT_SECRET
