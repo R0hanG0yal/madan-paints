@@ -1,0 +1,15 @@
+{
+  "name": "madan-paints",
+  "version": "1.0.0",
+  "description": "Madan Paints - Premium Paints & Coatings E-commerce",
+  "private": true,
+  "scripts": {
+    "install:all": "cd server && npm install && cd ../client && npm install",
+    "build:client": "cd client && npm run build",
+    "start": "cd server && npm start",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev"
+  },
+  "keywords": ["paints", "ecommerce", "react", "express"],
+  "license": "MIT"
+}

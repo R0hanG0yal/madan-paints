@@ -1,0 +1,228 @@
+{
+  "users": [
+    {
+      "id": "bdd0d38c-1bf0-4c2a-a632-02177c8dd4f8",
+      "name": "rohan",
+      "email": "rohangoyal@gmail.com",
+      "password": "$2a$10$3UJYUm4ZbHrB/bYuuQskvek0guqASdLH2.n1PJkMsivhjIvyFUbrK",
+      "phone": "",
+      "address": "",
+      "createdAt": "2026-06-10T15:03:00.500Z"
+    },
+    {
+      "id": "6f24f96a-1d11-4c74-abad-aee8c238f85d",
+      "name": "Admin",
+      "email": "admin@madanpaints.com",
+      "password": "$2a$10$vzh7ztZqIRjGclb/bYjMq.FbS0L/ZDHW9EDlFJCFLMbCpsOXnOZkW",
+      "phone": "9729309927",
+      "address": "back side geeta bhawan kath mandi , Charkhi Dadri, Haryana - 127306",
+      "isAdmin": true,
+      "createdAt": "2026-06-10T15:11:23.672Z"
+    },
+    {
+      "id": "92c80b7b-4732-4296-980a-a94171eff398",
+      "name": "rohan",
+      "email": "rohangoyal127208@gmail.com",
+      "password": "$2a$10$370InJwmY7fanOV5RAogf.xwdPskR03apZ9VWCFgtRjFs.E9YseVi",
+      "phone": "9729309927",
+      "address": "back side geeta bhawan kath mandi charkhi dadri, charkhi dadri, haryana - 127306",
+      "createdAt": "2026-06-12T09:54:42.201Z"
+    },
+    {
+      "id": "88be2d9e-bb1a-430a-bd44-2cc09ee06c5d",
+      "name": "rohan",
+      "email": "rohangoyal5127@gmail.com",
+      "password": "$2a$10$Z5No9iaehElBg9IZjLBcbuNYbWYZGboPMqjjY1.4nT.nhv1HP2ECS",
+      "phone": "",
+      "address": "",
+      "createdAt": "2026-06-12T10:32:44.437Z"
+    }
+  ],
+  "cartItems": [
+    {
+      "id": 1781103783403,
+      "userId": "bdd0d38c-1bf0-4c2a-a632-02177c8dd4f8",
+      "productId": "p24",
+      "quantity": 1
+    },
+    {
+      "id": 1781109622239,
+      "userId": "6f24f96a-1d11-4c74-abad-aee8c238f85d",
+      "productId": "p5",
+      "quantity": 1
+    },
+    {
+      "id": 1781110598385,
+      "userId": "6f24f96a-1d11-4c74-abad-aee8c238f85d",
+      "productId": "p12",
+      "quantity": 1
+    },
+    {
+      "id": 1781110608451,
+      "userId": "6f24f96a-1d11-4c74-abad-aee8c238f85d",
+      "productId": "p26",
+      "quantity": 1
+    },
+    {
+      "id": 1781110617718,
+      "userId": "6f24f96a-1d11-4c74-abad-aee8c238f85d",
+      "productId": "p28",
+      "quantity": 1
+    },
+    {
+      "id": 1781111885991,
+      "userId": "6f24f96a-1d11-4c74-abad-aee8c238f85d",
+      "productId": "p47",
+      "quantity": 1
+    },
+    {
+      "id": 1781111888438,
+      "userId": "6f24f96a-1d11-4c74-abad-aee8c238f85d",
+      "productId": "p43",
+      "quantity": 1
+    },
+    {
+      "id": 1781203533502,
+      "userId": "bdd0d38c-1bf0-4c2a-a632-02177c8dd4f8",
+      "productId": "p26",
+      "quantity": 1
+    },
+    {
+      "id": 1781203551549,
+      "userId": "6f24f96a-1d11-4c74-abad-aee8c238f85d",
+      "productId": "p136",
+      "quantity": 1
+    },
+    {
+      "id": 1781260377875,
+      "userId": "88be2d9e-bb1a-430a-bd44-2cc09ee06c5d",
+      "productId": "p137",
+      "quantity": 1
+    }
+  ],
+  "orders": [
+    {
+      "id": "ORDFAD049AC",
+      "userId": "6f24f96a-1d11-4c74-abad-aee8c238f85d",
+      "items": [
+        {
+          "productId": "p12",
+          "name": "Primer White - All Purpose Primer",
+          "price": 499,
+          "quantity": 1,
+          "hexColor": "#E8E0D8",
+          "selectedSize": null,
+          "brand": "Madan Paints"
+        },
+        {
+          "productId": "p24",
+          "name": "Madan Paints Premium Wall Putty (1kg)",
+          "price": 299,
+          "quantity": 1,
+          "hexColor": "#F0EAD6",
+          "selectedSize": null,
+          "brand": "Madan Paints"
+        }
+      ],
+      "total": 798,
+      "status": "delivered",
+      "shippingAddress": "123 Test Street, Charkhi Dadri, Haryana - 127306",
+      "paymentMethod": "Cash on Delivery",
+      "createdAt": "2026-06-10T16:00:33.590Z",
+      "statusHistory": [
+        {
+          "status": "confirmed",
+          "timestamp": "2026-06-10T16:00:33.590Z",
+          "note": "Order placed successfully"
+        },
+        {
+          "status": "out_for_delivery",
+          "timestamp": "2026-06-10T16:18:18.360Z",
+          "note": "Order out_for_delivery"
+        },
+        {
+          "status": "delivered",
+          "timestamp": "2026-06-10T16:18:24.813Z",
+          "note": "Order delivered"
+        }
+      ]
+    },
+    {
+      "id": "ORDA2B09B4D",
+      "userId": "6f24f96a-1d11-4c74-abad-aee8c238f85d",
+      "items": [
+        {
+          "productId": "p1",
+          "name": "Crimson Elegance - Premium Interior Emulsion",
+          "price": 899,
+          "quantity": 3,
+          "hexColor": "#DC143C",
+          "selectedSize": null,
+          "brand": "Madan Paints"
+        },
+        {
+          "productId": "p2",
+          "name": "Oceanic Blue - Luxury Interior Paint",
+          "price": 999,
+          "quantity": 1,
+          "hexColor": "#1E90FF",
+          "selectedSize": null,
+          "brand": "Madan Paints"
+        }
+      ],
+      "total": 3696,
+      "status": "shipped",
+      "shippingAddress": "back side geeta bhawan kath mandi , Charkhi Dadri, Haryana - 127306",
+      "paymentMethod": "Online Payment (UPI/Card)",
+      "createdAt": "2026-06-10T16:30:57.149Z",
+      "statusHistory": [
+        {
+          "status": "confirmed",
+          "timestamp": "2026-06-10T16:30:57.149Z",
+          "note": "Order placed successfully"
+        },
+        {
+          "status": "shipped",
+          "timestamp": "2026-06-11T06:59:46.111Z",
+          "note": "Order shipped"
+        }
+      ]
+    },
+    {
+      "id": "ORDD59A5BCE",
+      "userId": "92c80b7b-4732-4296-980a-a94171eff398",
+      "items": [
+        {
+          "productId": "p524",
+          "name": "Nerolac Beauty Smooth - Champagne",
+          "price": 559,
+          "quantity": 1,
+          "hexColor": "#F7E7CE",
+          "selectedSize": null,
+          "brand": "Nerolac"
+        },
+        {
+          "productId": "p536",
+          "name": "Nerolac Excel Everlast 20 - Warm Beige",
+          "price": 3499,
+          "quantity": 1,
+          "hexColor": "#D4A574",
+          "selectedSize": null,
+          "brand": "Nerolac"
+        }
+      ],
+      "total": 4058,
+      "status": "confirmed",
+      "shippingAddress": "back side geeta bhawan kath mandi charkhi dadri, charkhi dadri, haryana - 127306",
+      "paymentMethod": "Cash on Delivery",
+      "createdAt": "2026-06-12T10:01:25.284Z",
+      "statusHistory": [
+        {
+          "status": "confirmed",
+          "timestamp": "2026-06-12T10:01:25.284Z",
+          "note": "Order placed successfully"
+        }
+      ]
+    }
+  ]
+}
