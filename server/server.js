@@ -1,3 +1,4 @@
+javascript
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -19,92 +20,86 @@ import { sanitizeRequestBody, errorHandler } from './middleware/security.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load environment variables
 dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ── Security Headers (Helmet) ──
 const isProduction = process.env.NODE_ENV === 'production';
 
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: 'cross-origin' }, // Allow uploads to be accessed
-  contentSecurityPolicy: isProduction ? {
-    directives: {
-      defaultSrc: ["'self'"],
-      // Scripts: own + inline (React needs it) + Three.js eval patterns
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      // Styles: own + inline (React components)
-      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-      // Fonts: Inter from Google
-      fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-      // API connections same-origin only in production
-      connectSrc: ["'self'"],
-      // Images: uploads, inline data (swatches), blobs (Three.js textures)
-      imgSrc: ["'self'", 'data:', 'blob:'],
-      // Workers: needed by Three.js
-      workerSrc: ["'self'", 'blob:'],
-      // Prevent clickjacking
-      frameAncestors: ["'none'"],
-      // Manifest support
-      manifestSrc: ["'self'"],
-      // Prevent base tag injection
-      baseUri: ["'self'"],
-      // Restrict form submissions
-      formAction: ["'self'"],
+// Security
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    contentSecurityPolicy: false
+  })
+);
+
+// CORS
+const allowedOrigins = (
+  process.env.ALLOWED_ORIGINS ||
+  'http://localhost:5173,http://localhost:3000,https://madanpaints.onrender.com'
+).split(',');
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.includes('onrender.com')
+      ) {
+        return callback(null, true);
+      }
+
+      callback(null, true);
     },
-  } : false,
-}));
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  })
+);
 
-// ── CORS — restrict to allowed origins ──
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173,http://localhost:3000').split(',');
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (server-to-server, curl, Postman, etc.)
-    if (!origin) return callback(null, true);
-    // In production with same-origin serving, CORS is not needed for browser requests
-    if (isProduction) return callback(null, true);
-    // Allow if origin is in the allowed list
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    // In development, allow all origins for convenience
-    return callback(null, true);
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-// ── General Rate Limiting ──
+// Rate Limiter
 const generalLimiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_MAX) || 100, // 100 requests per window
-  message: { message: 'Too many requests, please try again later' },
+  windowMs:
+    parseInt(process.env.RATE_LIMIT_WINDOW_MS) ||
+    15 * 60 * 1000,
+  max: parseInt(process.env.RATE_LIMIT_MAX) || 100,
   standardHeaders: true,
-  legacyHeaders: false,
+  legacyHeaders: false
 });
-app.use('/api/', generalLimiter);
 
-// ── Cookie Parser (for httpOnly JWT cookies) ──
+app.use('/api', generalLimiter);
+
 app.use(cookieParser());
 
-// ── Body Parsing with size limits ──
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
-// ── Input Sanitization ──
 app.use(sanitizeRequestBody);
 
-// Load products into memory
-const productsPath = path.join(__dirname, 'data', 'products.json');
-let products = JSON.parse(fs.readFileSync(productsPath, 'utf-8'));
+// Products
+const productsPath = path.join(
+  __dirname,
+  'data',
+  'products.json'
+);
 
-// Make products accessible to routes
+const products = JSON.parse(
+  fs.readFileSync(productsPath, 'utf-8')
+);
+
 app.set('products', products);
 
-// ── Routes ──
+// Uploads
+app.use(
+  '/uploads',
+  express.static(path.join(__dirname, '..', 'uploads'))
+);
+
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
@@ -112,37 +107,36 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/upload', uploadRoutes);
 
-// Serve uploaded files
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
-
-// Health check
+// Health Check
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
-    timestamp: new Date().toISOString(), 
+  res.json({
+    status: 'OK',
     productsCount: products.length,
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString()
   });
 });
 
-// ── Serve built client files in production ──
-if (isProduction) {
-  const clientDistPath = path.join(__dirname, '..', 'client', 'dist');
-  app.use(express.static(clientDistPath));
-  // All non-API routes go to index.html for client-side routing
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(clientDistPath, 'index.html'));
+// Root Route
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Madan Paints API Running',
+    status: 'OK'
   });
-}
+});
 
-// ── Global Error Handler ──
+// 404 Handler
+app.use((req, res) => {
+  res.status(404).json({
+    message: 'Route not found'
+  });
+});
+
+// Error Handler
 app.use(errorHandler);
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${isProduction ? 'production' : 'development'}`);
   console.log(`${products.length} products loaded`);
-  if (isProduction) {
-    console.log('Serving frontend static files');
-  }
 });
