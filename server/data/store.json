@@ -36,6 +36,15 @@
       "phone": "",
       "address": "",
       "createdAt": "2026-06-12T10:32:44.437Z"
+    },
+    {
+      "id": "108365a6-03eb-4133-a1d1-d11f09593e42",
+      "name": "Rohan Goyal",
+      "email": "rohangoyal2025@jklu.edu.in",
+      "password": "$2a$10$oZ679eod.G306BW0f64xiu2obURkVsLRiqJbg6FhyTeptCuyIDmHm",
+      "phone": "9729309927",
+      "address": "",
+      "createdAt": "2026-06-12T17:43:42.049Z"
     }
   ],
   "cartItems": [

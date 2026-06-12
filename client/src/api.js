@@ -5,7 +5,7 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL || 'https://madan-paints-f415.onrender.com';
 
 const API = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_URL,
   headers: { 'Content-Type': 'application/json' },
   withCredentials: true // Send httpOnly cookies with every request
 });
