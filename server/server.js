@@ -15,7 +15,15 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// CORS config — must use explicit origin when withCredentials is true
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim())
+  : ['http://localhost:5173', 'http://localhost:5000', 'http://localhost:4173'];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 app.use(express.json());
 
 // Load products
@@ -26,13 +34,7 @@ app.set('products', products);
 
 console.log(`Loaded ${products.length} products`);
 
-// TEST ROUTES
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Backend Running'
-  });
-});
-
+// Health check
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
@@ -42,6 +44,23 @@ app.get('/api/health', (req, res) => {
 
 // PRODUCTS ROUTES
 app.use('/api/products', productRoutes);
+
+// Serve static files from the React build in production
+const clientDistPath = path.join(__dirname, '..', 'client', 'dist');
+if (fs.existsSync(clientDistPath)) {
+  console.log('Serving static files from', clientDistPath);
+  app.use(express.static(clientDistPath));
+
+  // SPA fallback: serve index.html for all non-API routes
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+  });
+} else {
+  console.log('No client dist found — API only mode');
+  app.get('/', (req, res) => {
+    res.json({ message: 'Backend Running' });
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

@@ -2,6 +2,7 @@ services:
   - type: web
     name: madan-paints
     env: node
+    installCommand: npm run install:all
     buildCommand: npm run build:client
     startCommand: npm start
     healthCheckPath: /api/health
