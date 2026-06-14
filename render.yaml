@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: madan-paints
+    name: madanpaints
     env: node
     installCommand: npm install && cd client && npm install
     buildCommand: npm run build:client
@@ -12,7 +12,7 @@ services:
       - key: VITE_API_URL
         value: /api
       - key: ALLOWED_ORIGINS
-        value: https://madan-paints.onrender.com
+        value: https://madanpaints.onrender.com
       - key: JWT_SECRET
         generateValue: true
       - key: RATE_LIMIT_WINDOW_MS
