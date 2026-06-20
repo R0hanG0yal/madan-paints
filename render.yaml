@@ -3,7 +3,7 @@ services:
     name: madanpaints
     env: node
     plan: free
-    buildCommand: npm install && cd client && npm install && cd .. && npm run build:client
+    buildCommand: npm install && cd client && npm install --legacy-peer-deps && cd .. && npm run build:client
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:
