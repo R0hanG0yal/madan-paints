@@ -49,9 +49,20 @@ export default function ProductCard({ product }) {
   const finish = product.finish || '';
   const isCompared = inCompare(product.id);
 
+  let productImg = null;
+  if (product.brand === 'Madan Paints') {
+    if (product.name.includes('Matte')) {
+      productImg = '/essential_matte.png';
+    } else if (product.name.includes('Satin') || product.name.includes('Velvet')) {
+      productImg = '/satin_velvet.png';
+    } else if (product.name.includes('Gloss')) {
+      productImg = '/gloss_collection.png';
+    }
+  }
+
   return (
     <Link to={`/product/${product.id}`} className="product-card">
-      <div className="product-card-image" style={{ background: '#faf3f0' }}>
+      <div className="product-card-image" style={{ background: '#fafafa' }}>
         {/* Compare Checkbox */}
         <div className="product-card-compare" onClick={handleToggleCompare}>
           <div className={`compare-checkbox ${isCompared ? 'checked' : ''}`}>
@@ -59,24 +70,31 @@ export default function ProductCard({ product }) {
           </div>
           <span className="compare-checkbox-label">Compare</span>
         </div>
-        {/* Color Swatch */}
-        <div className="paint-swatch-container">
-          <div className={`paint-swatch ${flyAnimation ? 'swatch-fly' : ''}`} style={{ backgroundColor: hexColor }}>
-            <div className="paint-swatch-overlay">
-              <span className="paint-swatch-hex">{hexColor}</span>
+        {productImg ? (
+          <div className="product-image-container-premium">
+            <img src={productImg} alt={product.name} className="product-image-premium" />
+            <div className="paint-swatch-indicator" style={{ backgroundColor: hexColor }} title={hexColor}></div>
+          </div>
+        ) : (
+          /* Color Swatch */
+          <div className="paint-swatch-container">
+            <div className={`paint-swatch ${flyAnimation ? 'swatch-fly' : ''}`} style={{ backgroundColor: hexColor }}>
+              <div className="paint-swatch-overlay">
+                <span className="paint-swatch-hex">{hexColor}</span>
+                {product.asianColorCode && (
+                  <span className="paint-swatch-code">{product.asianColorCode}</span>
+                )}
+              </div>
+            </div>
+            <div className="paint-swatch-info">
+              <span className="paint-type">{paintType}</span>
               {product.asianColorCode && (
-                <span className="paint-swatch-code">{product.asianColorCode}</span>
+                <span className="paint-finish code">Code: {product.asianColorCode}</span>
               )}
+              {finish && !product.asianColorCode && <span className="paint-finish">{finish}</span>}
             </div>
           </div>
-          <div className="paint-swatch-info">
-            <span className="paint-type">{paintType}</span>
-            {product.asianColorCode && (
-              <span className="paint-finish code">Code: {product.asianColorCode}</span>
-            )}
-            {finish && !product.asianColorCode && <span className="paint-finish">{finish}</span>}
-          </div>
-        </div>
+        )}
         {product.badge && <span className="product-badge">{product.badge}</span>}
         {discount > 0 && <span className="product-discount">-{discount}%</span>}
       </div>

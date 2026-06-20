@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 
 const PAINT_TYPES = [
@@ -98,8 +99,8 @@ export default function PaintCalculator() {
     navigate(`/products?category=${cat}`);
   };
 
-  return (
-    <div className="calculator-page">
+  return ( <>
+    <Helmet><title>Paint Calculator - Madan Paints</title></Helmet>
       <button className="back-btn" onClick={() => navigate(-1)}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M19 12H5" /><polyline points="12 19 5 12 12 5" />
@@ -112,12 +113,7 @@ export default function PaintCalculator() {
         <span>Paint Calculator</span>
       </div>
 
-      <div className="calculator-hero">
-        <h1>🧮 Paint Calculator</h1>
-        <p>Enter your room dimensions and get an instant estimate of how much paint you need</p>
-      </div>
-
-      <div className="calculator-layout">
+      <div className="calculator-page">
         {/* Input Form */}
         <div className="calculator-form-card">
           <h2>Room Dimensions</h2>
@@ -289,7 +285,7 @@ export default function PaintCalculator() {
 
               {/* Tips */}
               <div className="calc-tips">
-                <h4>💡 Pro Tips</h4>
+                <h1>Calculator</h1>
                 <ul>
                   <li>Always buy <strong>10-15% extra</strong> paint for touch-ups and future repairs</li>
                   <li>Use <strong>primer</strong> for better coverage — reduces paint needed by up to 20%</li>
@@ -301,6 +297,5 @@ export default function PaintCalculator() {
           ) : null}
         </div>
       </div>
-    </div>
-  );
+  </> );
 }

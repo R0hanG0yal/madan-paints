@@ -1,17 +1,53 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import API from '../api';
 import ProductCard from '../components/ProductCard';
 import CategoryCard from '../components/CategoryCard';
 import BrandLogoCard, { getBrandStyle } from '../components/BrandLogoCard';
 
 export default function Home() {
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
   const [products, setProducts] = useState([]);
   const [asianPaintsProducts, setAsianPaintsProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [allBrands, setAllBrands] = useState([]);
   const [brandColors, setBrandColors] = useState({});
   const [loading, setLoading] = useState(true);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const featuredCollections = [
+    {
+      title: 'Essential Matte Collection',
+      subtitle: 'Sophisticated flat finish.',
+      price: '₹7,100 / Gallon',
+      image: '/essential_matte.png',
+      tag: 'ESSENTIAL MATTE',
+      link: '/products?brand=Madan+Paints&finish=Matte'
+    },
+    {
+      title: 'Satin Velvet Collection',
+      subtitle: 'Durable, elegant sheen.',
+      price: '₹7,900 / Gallon',
+      image: '/satin_velvet.png',
+      tag: 'SATIN VELVET',
+      link: '/products?brand=Madan+Paints&finish=Satin'
+    },
+    {
+      title: 'Gloss Collection',
+      subtitle: 'High-shine statement colors.',
+      price: '₹8,700 / Gallon',
+      image: '/gloss_collection.png',
+      tag: 'GLOSS COLLECTION',
+      link: '/products?brand=Madan+Paints&finish=Gloss'
+    }
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +85,7 @@ export default function Home() {
 
   // Trending: Asian Paints & premium putty brands
   const trendingProducts = products.filter(p =>
-    (p.brand === 'Asian Paints' || p.brand === 'Birla Putty' || p.brand === 'JK Putty')
+    (p.brand === 'Asian Paints' || p.brand === 'Birla Putty' || p.brand === 'JK Putty' || p.brand === 'Madan Paints')
   ).slice(0, 8);
 
   // "More Products You May Like": All branded paints & putty
@@ -62,46 +98,65 @@ export default function Home() {
 
   // Featured brand for hero spotlight (top brand by count, excluding Asian Paints)
   const heroFeaturedBrand = allBrands
-    .filter(b => b.name !== 'Asian Paints')
+    .filter(b => b.name !== 'Asian Paints' && b.name !== 'Madan Paints')
     .sort((a, b) => b.count - a.count)[0];
   const heroBrandStyle = heroFeaturedBrand ? getBrandStyle(heroFeaturedBrand.name) : null;
 
   return (
     <div className="home-page">
-      {/* Hero Banner */}
-      <section className="hero-banner">
-        <div className="hero-content">
-          <div className="hero-text">
-            <h1>Premium Paints & Coatings</h1>
-            <p>Transform your space with top brands. Up to 40% off on all interior & exterior paints</p>
-            <div className="hero-countdown">
-              <div className="countdown-item"><span className="countdown-value">12</span><span>Hours</span></div>
-              <div className="countdown-item"><span className="countdown-value">45</span><span>Mins</span></div>
-              <div className="countdown-item"><span className="countdown-value">30</span><span>Secs</span></div>
-            </div>
-            <Link to="/products" className="btn-shop-now">Shop Now</Link>
+      {/* Premium Hero Banner */}
+      <section className="hero-banner-premium">
+        <div className="hero-banner-inner" style={{ backgroundImage: "url('/hero_room.png')" }}>
+          <div className="hero-overlay-content">
+            <span className="hero-subtitle">CURATED COLORS. LUXURY FINISHES.</span>
+            <h1 className="hero-title">Transform Your Home with Madan Paints</h1>
+            <Link to="/products" className="btn-hero-collection">SHOP THE COLLECTION</Link>
           </div>
-          <div className="hero-deals">
-            {heroFeaturedBrand && heroBrandStyle && (
-              <div
-                className="hero-brand-spotlight"
-                onClick={() => window.location.href = `/brand/${encodeURIComponent(heroFeaturedBrand.name)}`}
-                style={{ background: heroBrandStyle.gradient }}
-              >
-                <div className="hero-brand-spotlight-label">Featured Brand</div>
-                <div className="hero-brand-spotlight-logo">
-                  {heroBrandStyle.logo}
-                  {heroBrandStyle.logoStrong && <strong> {heroBrandStyle.logoStrong}</strong>}
-                </div>
-                <div className="hero-brand-spotlight-tagline">{heroBrandStyle.tagline}</div>
-                <div className="hero-brand-spotlight-count">{heroFeaturedBrand.count} Products</div>
+        </div>
+      </section>
+
+      {/* Search & Featured Collections */}
+      <section id="collections" className="featured-collections-section">
+        <div className="collections-controls">
+          <form className="collections-search" onSubmit={handleSearch}>
+            <span className="search-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </span>
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </form>
+          
+          <h2 className="collections-main-title">FEATURED COLLECTIONS</h2>
+          
+          <div className="collections-palette">
+            <span className="palette-dot dot-teal" title="Teal Swatch"></span>
+            <span className="palette-dot dot-ochre" title="Ochre Swatch"></span>
+            <span className="palette-dot dot-blue" title="Blue Swatch"></span>
+          </div>
+        </div>
+
+        <div className="collections-grid">
+          {featuredCollections.map((col, idx) => (
+            <div key={idx} className="collection-card-premium">
+              <div className="collection-tag">{col.tag}</div>
+              <div className="collection-image-wrapper">
+                <img src={col.image} alt={col.title} className="collection-image" />
               </div>
-            )}
-            <div className="deal-card-bank">
-              <span className="deal-label">BANK OFFER</span>
-              <span className="deal-text">10% Instant Discount</span>
+              <div className="collection-card-info">
+                <h3 className="collection-title">{col.title}</h3>
+                <p className="collection-subtitle">{col.subtitle}</p>
+                <div className="collection-price">{col.price}</div>
+                <Link to={col.link} className="btn-collection-explore">EXPLORE</Link>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       </section>
 
@@ -188,7 +243,7 @@ export default function Home() {
 
       {/* Promotional Banner */}
       <section className="section banner-ad">
-        <div className="banner-content" style={{ background: 'linear-gradient(135deg, #ff3f6c 0%, #e91e63 100%)' }}>
+        <div className="banner-content" style={{ background: 'linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)' }}>
           <div className="banner-text">
             <h2>Professional Grade Paints</h2>
             <p>From primers to premium finishes - Everything for your dream home at factory prices</p>
@@ -217,19 +272,19 @@ export default function Home() {
       {/* Service Features */}
       <section className="services-bar">
         <div className="service-item">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="#ff3f6c"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" /></svg>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="var(--accent)"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" /></svg>
           <span>Free Delivery</span>
         </div>
         <div className="service-item">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="#ff3f6c"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" /></svg>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" /></svg>
           <span>100% Secure</span>
         </div>
         <div className="service-item">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="#ff3f6c"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12zm-7-8c-1.66 0-3-1.34-3-3H7c0 2.76 2.24 5 5 5s5-2.24 5-5h-2c0 1.66-1.34 3-3 3z" /></svg>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="var(--accent)"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12zm-7-8c-1.66 0-3-1.34-3-3H7c0 2.76 2.24 5 5 5s5-2.24 5-5h-2c0 1.66-1.34 3-3 3z" /></svg>
           <span>Easy Returns</span>
         </div>
         <div className="service-item">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="#ff3f6c"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg>
           <span>Genuine Products</span>
         </div>
       </section>

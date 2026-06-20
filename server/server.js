@@ -1,11 +1,13 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 import productRoutes from './routes/products.js';
+import authRoutes from './routes/auth.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,6 +27,7 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+app.use(cookieParser());
 
 // Load products
 const productsPath = path.join(__dirname, 'data', 'products.json');
@@ -41,6 +44,9 @@ app.get('/api/health', (req, res) => {
     productsCount: products.length
   });
 });
+
+// AUTH ROUTES
+app.use('/api/auth', authRoutes);
 
 // PRODUCTS ROUTES
 app.use('/api/products', productRoutes);
