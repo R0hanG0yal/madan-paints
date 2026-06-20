@@ -20,7 +20,9 @@
     "@vitejs/plugin-react": "^4.2.1",
     "three": "^0.160.0",
     "@react-three/fiber": "^8.15.12",
-    "@react-three/drei": "^9.96.1"
+    "@react-three/drei": "^9.96.1",
+    "@react-three/postprocessing": "^2.16.2",
+    "postprocessing": "^6.36.3"
   },
   "devDependencies": {
     "typescript": "^5.2.2",
