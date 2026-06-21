@@ -17,7 +17,7 @@ export function CartProvider({ children }) {
     try {
       setLoading(true);
       const res = await API.get('/cart');
-      setItems(res.data.items);
+      setItems(res.data.items || []);
     } catch (err) {
       if (err.response?.status !== 401) {
         console.error('Cart fetch error:', err);

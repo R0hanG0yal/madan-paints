@@ -8,6 +8,11 @@ import { fileURLToPath } from 'url';
 
 import productRoutes from './routes/products.js';
 import authRoutes from './routes/auth.js';
+import cartRoutes from './routes/cart.js';
+import orderRoutes from './routes/orders.js';
+import adminRoutes from './routes/admin.js';
+import uploadRoutes from './routes/upload.js';
+import https from 'https';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -50,6 +55,34 @@ app.use('/api/auth', authRoutes);
 
 // PRODUCTS ROUTES
 app.use('/api/products', productRoutes);
+
+// CART ROUTES
+app.use('/api/cart', cartRoutes);
+
+// ORDER ROUTES
+app.use('/api/orders', orderRoutes);
+
+// ADMIN ROUTES
+app.use('/api/admin', adminRoutes);
+
+// UPLOAD ROUTES
+app.use('/api/upload', uploadRoutes);
+
+// Catch all undefined API routes and return 404 JSON
+app.all('/api/*', (req, res) => {
+  res.status(404).json({ message: 'API Route Not Found' });
+});
+
+// Self-ping to prevent Render from sleeping
+const PING_INTERVAL = 14 * 60 * 1000; // 14 minutes
+setInterval(() => {
+  const url = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+  if (url) {
+    https.get(`${url}/api/health`).on('error', (err) => {
+      console.error('Self-ping failed:', err.message);
+    });
+  }
+}, PING_INTERVAL);
 
 // Serve static files from the React build in production
 const clientDistPath = path.join(__dirname, '..', 'client', 'dist');
